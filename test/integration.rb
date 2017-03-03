@@ -48,6 +48,19 @@ module Spreadsheet
     ensure
       File.delete copy if File.exist? copy
     end
+
+    def test_wrong_rowblock
+      path = File.join @data, 'wrong_rowblock.xls'
+      book = Spreadsheet.open path
+      sheet = book.worksheet(0)
+      cell32_1 = sheet.cell(32,0)
+      assert_equal "Gomes Rico, Juan Luis \u0000", cell32_1
+      cell33 = sheet.cell(33,0)
+      assert_equal "Gomez Aquino, Emilio \u0000", cell33
+      cell32_2 = sheet.cell(32,0)
+      assert_equal "Gomes Rico, Juan Luis \u0000", cell32_2
+    end
+
     def test_empty_workbook
       path = File.join @data, 'test_empty.xls'
       book = Spreadsheet.open path
